@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <title>Lista produktów</title>
+</head>
+<body>
+<h1>Produkty</h1>
+<table>
+    <tr>
+
+
+
+    {% for product in products %}
+
+            <td><strong>{{ product.nazwa }}</strong><br></td>
+        <td>Cena {{ product.cena }} zł</td>
+    </tr>
+    {% endfor %}
+
+</table>
+</body>
+</html>
