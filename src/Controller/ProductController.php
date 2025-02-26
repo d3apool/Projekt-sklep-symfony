@@ -13,7 +13,7 @@ class ProductController extends AbstractController
     #[Route('/products', name: 'products')]
     public function index(ProductRepository $productRepository): Response
     {
-        var_dump('dududucos'); die();
+        var_dump('dududuffjeoif'); die();
         // Pobranie wszystkich produktów z bazy danych
         $products = $productRepository->findAll();
 
