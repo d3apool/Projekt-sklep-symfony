@@ -1,22 +1,31 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Lista produktów</title>
 </head>
 <body>
 <h1>Produkty</h1>
-<table>
+<table >
+    <thead>
     <tr>
-
-
-
-    {% for product in products %}
-
-            <td><strong>{{ product.nazwa }}</strong><br></td>
-        <td>Cena {{ product.cena }} zł</td>
+        <th>Nazwa produktu</th>
+        <th>Cena</th>
+        <th>Do koszyka</th>
     </tr>
-    {% endfor %}
+    </thead>
+    <tbody>
+    {% for product in products %}
+        <tr>
+            <td><strong>{{ product.nazwa }}</strong></td>
+            <td>{{ product.cena }} zł</td>
+            <td>
 
+                <button type="button">Dodaj do koszyka</button>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
 </table>
 </body>
 </html>
