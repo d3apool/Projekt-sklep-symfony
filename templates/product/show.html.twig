@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <title>Koszyk</title>
+</head>
+<body>
+<h1>Twój koszyk</h1>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Nazwa produktu</th>
+        <th>Ilość</th>
+        <th>Cena produktu</th>
+        <th>Suma</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for item in cartItems %}
+        <tr>
+            <td>{{ item.product.nazwa }}</td>
+            <td>{{ item.item.quantity }}</td>
+            <td>{{ item.item.cenaProduktu }} zł</td>
+            <td>{{ item.item.cenaProduktu * item.item.quantity }} zł</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<p>Suma: {{ totalPrice }} zł</p>
+<a href="{{ path('products') }}">Wróć do listy produktów</a>
+</body>
+</html>

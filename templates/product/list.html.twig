@@ -1,22 +1,32 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="pl">
 <head>
     <title>Lista produktów</title>
 </head>
 <body>
-<center><h1 >Produkty</h1></center>
-<table>
+<h1>Produkty</h1>
+<table border="1">
+    <thead>
     <tr>
-
-
-
-    {% for product in products %}
-
-            <td><strong>{{ product.nazwa }}</strong><br></td>
-        <td>Cena {{ product.cena }} zł</td>
+        <th>Nazwa produktu</th>
+        <th>Cena</th>
+        <th>Akcje</th>
     </tr>
+    </thead>
+    <tbody>
+    {% for product in products %}
+        <tr>
+            <td>{{ product.nazwa }}</td>
+            <td>{{ product.cena }} zł</td>
+            <td>
+                <a href="{{ path('cart_add', {'id': product.id}) }}">
+                    <button type="button">Dodaj do koszyka</button>
+                </a>
+            </td>
+        </tr>
     {% endfor %}
-
+    </tbody>
 </table>
+<a href="{{ path('cart_show') }}">Przejdź do koszyka</a>
 </body>
 </html>
