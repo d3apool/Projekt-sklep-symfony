@@ -2,41 +2,43 @@
 
 namespace App\Entity;
 
-use App\Repository\CartItemRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: CartItemRepository::class)]
+#[ORM\Entity]
+#[ORM\Table(name: 'cart_item')]
 class CartItem
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    #[ORM\Column(name: 'id_produktuW')]
+    private ?int $idProduktuW = null;
 
-    #[ORM\Column]
-    private ?int $quanity = null;
+    #[ORM\Column(name: 'quantity')]
+    private ?int $quantity = null;
 
-    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    #[ORM\Column(name: 'cena_produktu', type: 'decimal', precision: 10, scale: 2)]
     private ?string $cenaProduktu = null;
 
-    #[ORM\Column]
-    private ?int $produktID = null;
+    #[ORM\Column(name: 'produkt_id')]
+    private ?int $produktId = null;
 
-    public function getId(): ?int
+    #[ORM\ManyToOne(targetEntity: Cart::class, inversedBy: 'cartItems')]
+    #[ORM\JoinColumn(name: 'cart_id', referencedColumnName: 'id_koszyka')]
+    private ?Cart $cart = null;
+
+    public function getIdProduktuW(): ?int
     {
-        return $this->id;
+        return $this->idProduktuW;
     }
 
-    public function getQuanity(): ?int
+    public function getQuantity(): ?int
     {
-        return $this->quanity;
+        return $this->quantity;
     }
 
-    public function setQuanity(int $quanity): static
+    public function setQuantity(int $quantity): self
     {
-        $this->quanity = $quanity;
-
+        $this->quantity = $quantity;
         return $this;
     }
 
@@ -45,22 +47,31 @@ class CartItem
         return $this->cenaProduktu;
     }
 
-    public function setCenaProduktu(string $cenaProduktu): static
+    public function setCenaProduktu(string $cenaProduktu): self
     {
         $this->cenaProduktu = $cenaProduktu;
-
         return $this;
     }
 
-    public function getProduktID(): ?int
+    public function getProduktId(): ?int
     {
-        return $this->produktID;
+        return $this->produktId;
     }
 
-    public function setProduktID(int $produktID): static
+    public function setProduktId(int $produktId): self
     {
-        $this->produktID = $produktID;
+        $this->produktId = $produktId;
+        return $this;
+    }
 
+    public function getCart(): ?Cart
+    {
+        return $this->cart;
+    }
+
+    public function setCart(?Cart $cart): self
+    {
+        $this->cart = $cart;
         return $this;
     }
 }
