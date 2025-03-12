@@ -7,6 +7,7 @@ use App\Entity\CartItem;
 use App\Entity\Product;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -104,5 +105,70 @@ class CartController extends AbstractController
 
         // Przekierowujemy z powrotem do listy produktów
         return $this->redirectToRoute('products');
+    }
+
+    #[Route('/cart/remove/{id}', name: 'cart_remove')]
+    public function removeItem(int $id, EntityManagerInterface $entityManager): Response
+    {
+        // Znajdź element koszyka na podstawie id_produktuW
+        $cartItem = $entityManager->getRepository(CartItem::class)->find($id);
+
+        if (!$cartItem) {
+            throw $this->createNotFoundException('Element koszyka nie istnieje');
+        }
+
+        // Usuń element koszyka
+        $entityManager->remove($cartItem);
+        $entityManager->flush();
+
+        // Zaktualizuj cenę całkowitą koszyka
+        $cartId = 1; // Stały ID koszyka
+        $cart = $entityManager->getRepository(Cart::class)->find($cartId);
+        $this->updateCartTotalPrice($entityManager, $cart);
+
+        return $this->redirectToRoute('cart_show');
+    }
+
+    #[Route('/cart/update-quantity/{id}', name: 'cart_update_quantity')]
+    public function updateQuantity(int $id, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        // Znajdź element koszyka na podstawie id_produktuW
+        $cartItem = $entityManager->getRepository(CartItem::class)->find($id);
+
+        if (!$cartItem) {
+            throw $this->createNotFoundException('Element koszyka nie istnieje');
+        }
+
+        // Pobierz nową ilość z formularza
+        $newQuantity = (int) $request->request->get('quantity');
+
+        if ($newQuantity < 1) {
+            $this->addFlash('error', 'Ilość musi być co najmniej 1');
+            return $this->redirectToRoute('cart_show');
+        }
+
+        // Zaktualizuj ilość i zapisz zmiany
+        $cartItem->setQuantity($newQuantity);
+        $entityManager->flush();
+
+        // Zaktualizuj cenę całkowitą koszyka
+        $cartId = 1; // Stały ID koszyka
+        $cart = $entityManager->getRepository(Cart::class)->find($cartId);
+        $this->updateCartTotalPrice($entityManager, $cart);
+
+        return $this->redirectToRoute('cart_show');
+    }
+
+    private function updateCartTotalPrice(EntityManagerInterface $entityManager, Cart $cart): void
+    {
+        // Oblicz sumę cen wszystkich elementów w koszyku
+        $totalPrice = 0;
+        foreach ($entityManager->getRepository(CartItem::class)->findBy(['cart' => $cart]) as $item) {
+            $totalPrice += $item->getCenaProduktu() * $item->getQuantity();
+        }
+
+        // Ustaw nową cenę całkowitą i zapisz zmiany
+        $cart->setTotalPrice((string)$totalPrice);
+        $entityManager->flush();
     }
 }

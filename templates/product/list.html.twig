@@ -2,31 +2,30 @@
 <html lang="pl">
 <head>
     <title>Lista produktów</title>
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 </head>
 <body>
 <h1>Produkty</h1>
-<table border="1">
-    <thead>
-    <tr>
-        <th>Nazwa produktu</th>
-        <th>Cena</th>
-        <th>Akcje</th>
-    </tr>
-    </thead>
-    <tbody>
+<div class="product-list">
     {% for product in products %}
-        <tr>
-            <td>{{ product.nazwa }}</td>
-            <td>{{ product.cena }} zł</td>
-            <td>
-                <a href="{{ path('cart_add', {'id': product.id}) }}">
-                    <button type="button">Dodaj do koszyka</button>
-                </a>
-            </td>
-        </tr>
+        <div class="product">
+            <div class="image-placeholder">
+                <!-- Miejsce na zdjęcie -->
+                <div class="zdjecie">
+                    <img src="{{ asset('zdjeciaprod/' ~ product.id ~ '.jpg') }}" alt="Zdjęcie produktu">
+                </div>
+
+            </div>
+            <h2>{{ product.nazwa }}</h2>
+            <p>{{ product.cena }} zł</p>
+            <a href="{{ path('cart_add', {'id': product.id}) }}">
+                <button type="button">Dodaj do koszyka</button>
+            </a>
+        </div>
     {% endfor %}
-    </tbody>
-</table>
-<a href="{{ path('cart_show') }}">Przejdź do koszyka</a>
+</div>
+<div class="cart-link">
+    <a href="{{ path('cart_show') }}">Przejdź do koszyka</a>
+</div>
 </body>
 </html>

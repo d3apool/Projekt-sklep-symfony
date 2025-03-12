@@ -2,31 +2,40 @@
 <html lang="pl">
 <head>
     <title>Koszyk</title>
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 </head>
 <body>
 <h1>Twój koszyk</h1>
-<table border="1">
-    <thead>
-    <tr>
-        <th>Nazwa produktu</th>
-        <th>Ilość</th>
-        <th>Cena produktu</th>
-        <th>Suma</th>
-    </tr>
-    </thead>
-    <tbody>
+<div class="cart">
     {% for item in cartItems %}
-        <tr>
-            <td>{{ item.product.nazwa }}</td>
-            <td>{{ item.item.quantity }}</td>
-            <td>{{ item.item.cenaProduktu }} zł</td>
-            <td>{{ item.item.cenaProduktu * item.item.quantity }} zł</td>
-        </tr>
+        <div class="cart-item">
+            <div class="cart-item-image">
+                <img src="{{ asset('zdjeciaprod/' ~ item.product.id ~ '.jpg') }}" alt="Zdjęcie produktu">
+            </div>
+            <div class="cart-item-details">
+                <h2>{{ item.product.nazwa }}</h2>
+                <p>{{ item.item.cenaProduktu }} zł</p>
+                <div class="cart-item-quantity">
+                    <form action="{{ path('cart_update_quantity', {'id': item.item.idProduktuW}) }}" method="post">
+                        <button type="submit" name="quantity" value="{{ item.item.quantity + 1 }}">+</button>
+                        <span>{{ item.item.quantity }}</span>
+                        <button type="submit" name="quantity" value="{{ item.item.quantity - 1 }}">-</button>
+                    </form>
+                </div>
+            </div>
+            <div class="cart-item-actions">
+                <a href="{{ path('cart_remove', {'id': item.item.idProduktuW}) }}">
+                    <button type="button">Usuń</button>
+                </a>
+            </div>
+        </div>
     {% endfor %}
-    </tbody>
-</table>
+</div>
 
-<p>Suma: {{ totalPrice }} zł</p>
-<a href="{{ path('products') }}">Wróć do listy produktów</a>
+<p class="total-price">Suma: {{ totalPrice }} zł</p>
+
+<div class="back-link">
+    <a href="{{ path('products') }}">Wróć do listy produktów</a>
+</div>
 </body>
 </html>
